@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -45,6 +45,18 @@ spec:
             httpGet:
               path: /
               port: http
+          env:
+          - name: DB_HOST
+            value: {{ .Release.Name }}-mysql
+          - name: DB_USER
+            value: mysql-user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: api-db-pass
+                key: mysql-password
+          - name: DB_DATABASE
+            value: api_db   
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

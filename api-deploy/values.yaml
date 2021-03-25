@@ -2,13 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 3
 
 image:
-  repository: elkhaberi93/node-express-api
+  repository: docker.io/elkhaberi93/node-express-api
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.0.0
+  tag: 3.0.1
 
 imagePullSecrets: []
 nameOverride: ""
@@ -42,16 +42,18 @@ service:
   targetPort: 3000
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  enabled: true
+  annotations: #{}
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/hsts: "false"
   hosts:
-    - host: chart-example.local
+    - host: elkhaberi.info
       paths:
       - path: /
         backend:
-          serviceName: chart-example.local
+          serviceName: node-express-api-api-deploy
           servicePort: 80
   tls: []
   #  - secretName: chart-example-tls
@@ -82,3 +84,21 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# mysql
+mysql:
+  mysqlDatabase: api_db
+  mysqlUser: mysql-user
+  existingSecret: api-db-pass
+  initializationFiles:
+    1-create-table-users.sql: |-
+      CREATE TABLE users (
+        userID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        firstName VARCHAR(255),
+        lastName VARCHAR(255),
+        createdOn TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+    2-add-dummy-users.sql: |-
+      INSERT INTO users (firstName, lastName) VALUES ('Noam', 'Chomsky');
+      INSERT INTO users (firstName, lastName) VALUES ('Elon', 'Musk');
+      INSERT INTO users (firstName, lastName) VALUES ('Jeff', 'Bezos');
+      INSERT INTO users (firstName, lastName) VALUES ('James', 'Watson'); 
