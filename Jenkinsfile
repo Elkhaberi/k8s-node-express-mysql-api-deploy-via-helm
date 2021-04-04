@@ -36,7 +36,11 @@ spec:
         PATH = "/busybox:/kaniko:$PATH"
       }
       steps {
-        git(url: 'https://github.com/Elkhaberi/k8s-node-express-mysql-api-deploy-via-helm.git', changelog: true, branch: 'master', credentialsId: 'Github', poll: true)
+        git(url: 'https://github.com/Elkhaberi/k8s-node-express-mysql-api-deploy-via-helm.git', 
+            changelog: true, 
+            branch: 'master', 
+            credentialsId: 'Github', 
+            poll: true)
         container(name: 'kaniko', shell: '/busybox/sh') {
             sh '''#!/busybox/sh
             /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/elkhaberirepo/node-app:kaniko
