@@ -21,12 +21,12 @@ spec:
   volumes:
   - name: jenkins-docker-cfg
     projected:
-    sources:
-    - secret:
-        name: regcred
-        items:
-          - key: .dockerconfigjson
-            path: config.json
+      sources:
+      - secret:
+          name: regcred
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 """
     }
   }
@@ -43,7 +43,7 @@ spec:
             poll: true)
         container(name: 'kaniko', shell: '/busybox/sh') {
             sh '''#!/busybox/sh
-            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/elkhaberirepo/node-app:kaniko
+            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/elkhaberi93/node-express-api:kaniko
             '''
         }
       }
