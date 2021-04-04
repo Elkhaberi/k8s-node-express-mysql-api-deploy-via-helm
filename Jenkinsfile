@@ -43,7 +43,7 @@ spec:
             poll: true)
         container(name: 'kaniko', shell: '/busybox/sh') {
             sh '''#!/busybox/sh
-            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/elkhaberi93/node-express-api:kaniko
+            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=elkhaberi93/node-express-api:kaniko
             '''
         }
       }
