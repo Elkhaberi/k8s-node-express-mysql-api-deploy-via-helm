@@ -1,8 +1,8 @@
 pipeline {
   agent {
     kubernetes {
-      //cloud 'kubernetes'
       label 'kaniko'
+      defaultContainer 'jnlp'
       yaml """
 apiVersion: v1
 kind: Pod
@@ -12,7 +12,9 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
-    args: ["--context=git://github.com/Elkhaberi/k8s-node-express-mysql-api-deploy-via-helm","--destination=elkhaberi93/node-express-api:kaniko"]
+    command:
+    - /busybox/cat
+    tty: true
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
@@ -39,7 +41,7 @@ spec:
             poll: true)
         container(name: 'kaniko', shell: '/busybox/sh') {
             sh '''#!/busybox/sh
-            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --no-push
+            /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --destination elkhaberi93/node-express-api:kaniko
             '''
         }
       }
