@@ -1,7 +1,5 @@
 pipeline {
-  agent {
-    label 'kaniko'
-  }
+  agent any
   stages {
     stage('Checkout') {
       steps {
